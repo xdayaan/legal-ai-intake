@@ -1,0 +1,63 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Bot {
+  id            String    @id @default(cuid())
+  name          String
+  description   String?
+  prompt        String
+  openmic_bot_id String?
+  webhook_urls  Json?
+  created_at    DateTime  @default(now())
+  updated_at    DateTime  @updatedAt
+  call_logs     CallLog[]
+
+  @@map("bots")
+}
+
+model CallLog {
+  id           String   @id @default(cuid())
+  bot_id       String
+  call_id      String
+  transcript   Json?
+  duration     Int?
+  client_info  Json?
+  case_details Json?
+  status       String   @default("completed")
+  created_at   DateTime @default(now())
+
+  bot Bot @relation(fields: [bot_id], references: [id], onDelete: Cascade)
+
+  @@map("call_logs")
+}
+
+model LegalCase {
+  id         String   @id @default(cuid())
+  case_id    String   @unique
+  client_name String
+  case_type  String
+  attorney   String
+  notes      String?
+  status     String   @default("active")
+  created_at DateTime @default(now())
+
+  @@map("legal_cases")
+}
+
+model Client {
+  id         String   @id @default(cuid())
+  client_id  String   @unique
+  name       String
+  email      String?
+  phone      String?
+  address    String?
+  created_at DateTime @default(now())
+
+  @@map("clients")
+}
