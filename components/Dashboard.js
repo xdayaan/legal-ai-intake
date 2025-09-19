@@ -5,6 +5,8 @@ import { Bot, Phone, FileText, Plus } from 'lucide-react'
 import Link from 'next/link'
 import CallLogTable from '@/components/CallLogTable'
 
+export const dynamic = 'force-dynamic'
+
 async function getStats() {
   const [totalBots, totalCalls, casesThisMonth] = await Promise.all([
     db.bot.count(),

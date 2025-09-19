@@ -2,6 +2,8 @@ import { db } from '@/lib/db'
 import { notFound } from 'next/navigation'
 import BotForm from '@/components/BotForm'
 
+export const dynamic = 'force-dynamic'
+
 async function getBot(id) {
   const bot = await db.bot.findUnique({
     where: { id }

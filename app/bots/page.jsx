@@ -4,6 +4,8 @@ import { Plus } from 'lucide-react'
 import Link from 'next/link'
 import BotCard from '@/components/BotCard'
 
+export const dynamic = 'force-dynamic'
+
 async function getBots() {
   return await db.bot.findMany({
     orderBy: { created_at: 'desc' },
