@@ -8,31 +8,41 @@ import CallLogTable from '@/components/CallLogTable'
 export const dynamic = 'force-dynamic'
 
 async function getStats() {
-  const [totalBots, totalCalls, casesThisMonth] = await Promise.all([
-    db.bot.count(),
-    db.callLog.count(),
-    db.legalCase.count({
-      where: {
-        created_at: {
-          gte: new Date(new Date().getFullYear(), new Date().getMonth(), 1)
+  try {
+    const [totalBots, totalCalls, casesThisMonth] = await Promise.all([
+      db.bot.count(),
+      db.callLog.count(),
+      db.legalCase.count({
+        where: {
+          created_at: {
+            gte: new Date(new Date().getFullYear(), new Date().getMonth(), 1)
+          }
         }
-      }
-    })
-  ])
+      })
+    ])
 
-  return { totalBots, totalCalls, casesThisMonth }
+    return { totalBots, totalCalls, casesThisMonth }
+  } catch (error) {
+    console.error('Error fetching stats:', error)
+    return { totalBots: 0, totalCalls: 0, casesThisMonth: 0 }
+  }
 }
 
 async function getRecentCalls() {
-  return await db.callLog.findMany({
-    take: 5,
-    orderBy: { created_at: 'desc' },
-    include: {
-      bot: {
-        select: { name: true }
+  try {
+    return await db.callLog.findMany({
+      take: 5,
+      orderBy: { created_at: 'desc' },
+      include: {
+        bot: {
+          select: { name: true }
+        }
       }
-    }
-  })
+    })
+  } catch (error) {
+    console.error('Error fetching recent calls:', error)
+    return []
+  }
 }
 
 export default async function Dashboard() {

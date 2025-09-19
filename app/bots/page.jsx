@@ -7,14 +7,19 @@ import BotCard from '@/components/BotCard'
 export const dynamic = 'force-dynamic'
 
 async function getBots() {
-  return await db.bot.findMany({
-    orderBy: { created_at: 'desc' },
-    include: {
-      _count: {
-        select: { call_logs: true }
+  try {
+    return await db.bot.findMany({
+      orderBy: { created_at: 'desc' },
+      include: {
+        _count: {
+          select: { call_logs: true }
+        }
       }
-    }
-  })
+    })
+  } catch (error) {
+    console.error('Error fetching bots:', error)
+    return []
+  }
 }
 
 export default async function BotsPage() {

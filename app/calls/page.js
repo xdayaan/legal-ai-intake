@@ -3,15 +3,22 @@ import CallLogTable from '@/components/CallLogTable'
 import { Button } from '@/components/ui/button'
 import { Download } from 'lucide-react'
 
+export const dynamic = 'force-dynamic'
+
 async function getCalls() {
-  return await db.callLog.findMany({
-    orderBy: { created_at: 'desc' },
-    include: {
-      bot: {
-        select: { name: true }
+  try {
+    return await db.callLog.findMany({
+      orderBy: { created_at: 'desc' },
+      include: {
+        bot: {
+          select: { name: true }
+        }
       }
-    }
-  })
+    })
+  } catch (error) {
+    console.error('Error fetching calls:', error)
+    return []
+  }
 }
 
 export default async function CallsPage() {
