@@ -8,8 +8,5 @@
     "app/api/**": {
       "maxDuration": 30
     }
-  },
-  "env": {
-    "NEXT_PUBLIC_NGROK_URL": "@next_public_ngrok_url"
   }
 }
